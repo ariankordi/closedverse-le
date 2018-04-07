@@ -1,0 +1,99 @@
+{% block html %}{% if not pjax %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+	{% endif %}
+    <title>{% if title %}{{ title }} - Closedverse{% else %}Closedverse{% endif %}</title>
+    {% if not pjax %}
+	<meta http-equiv="content-style-type" content="text/css">
+    <meta http-equiv="content-script-type" content="text/javascript">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-title" content="Closedverse">
+    <meta name="description" content="Closedverse is a social network: designed by PF2M, programmed by Arian Kordi. With Miiverse DNA, style and familiar assets such as Miiverse's interface and Miis, you're sure to have fun here!">
+	<meta property="og:locale" content="en_US">
+	{% if ogdata %}
+		<meta property="og:title" content="{{ ogdata.title }}">
+		<meta property="og:type" content="article">
+		<meta property="og:url" content="{{ req.url }}">
+		<meta property="og:image" content="{{ ogdata.image }}">
+		<meta property="og:description" content="{{ ogdata.description|truncate(150) }}">
+		<meta property="og:site_name" content="Closedverse">
+		<meta property="article:published_time" content="{{ ogdata.date }}">
+	{% endif %}
+	<link rel="shortcut icon" type="image/png" href="/s/img/favicon.png">
+    <link rel="stylesheet" type="text/css" href="/s/closedverse.css">
+	<link id="darkness" {% if req.session.lights %}disabled {% endif %}rel="stylesheet" type="text/css" href="/s/blueness.css">
+	<script src="/s/jslibs.js"></script>
+    <script src="/s/closedverse.js"></script>
+  </head>
+
+  <body class=""{% if req.user.is_authenticated %}
+  sess-usern="{{ req.user.username }}"
+  {% endif %}>
+    <div id="wrapper"{% if not req.user.is_authenticated %} class="guest"{% endif %}>
+      <div id="sub-body">
+        <menu id="global-menu">
+          <li id="global-menu-logo"><h1><a href="/"><img src="/s/img/menu-logo.png" alt="Closedverse"></a></h1></li>
+		  {% if req.user.is_authenticated %}
+          <li id="global-menu-list">
+            <ul>
+              <li id="global-menu-mymenu"><a href="/users/{{ req.user.username }}"><span class="icon-container {{ req.user.doClass() }}"><img src="{{ req.user.doAvatar() }}" alt="User Page"></span><span>User Page</span></a></li>
+			  <li id="global-menu-feed"><a href="/activity" class="symbol"><span>Activity Feed</span></a></li>
+              <li id="global-menu-community"><a href="/" class="symbol"><span>Communities</span></a></li>
+			  <li id="global-menu-message"><a href="/messages" class="symbol"><span>Messages</span></a></li>
+			  <li id="global-menu-news"><a href="/notifications" class="symbol"></a></li>
+              <li id="global-menu-my-menu"><button class="symbol js-open-global-my-menu open-global-my-menu"></button>
+                <menu id="global-my-menu" class="invisible none">
+                  <li><a href="/settings/profile" class="symbol my-menu-profile-setting"><span>Profile settings</span></a></li>
+                  <li><a href="#" class="symbol my-menu-account-setting"><span>Account preferences</span></a></li>
+                  <li><a href="/communities/announcements" class="symbol my-menu-openman"><span>Closedverse Announcements</span></a></li>
+                  <li><a href="/communities/changelog" class="symbol my-menu-openman"><span>Closedverse Changelog</span></a></li>
+                  <li><a href="/help/faq" class="symbol my-menu-guide"><span>Frequently Asked Questions (FAQ)</span></a></li>
+				  <li><a href="/help/rules" class="symbol my-menu-guide"><span>Closedverse Rules</span></a></li>
+                  <li><a href="/server" class="symbol my-menu-openman"><span>Server Statistics</span></a></li>
+				  <li>
+                    <form action="/logout" method="post" id="my-menu-logout" class="symbol">
+                      {{ csrf_token|safe }}
+                      <input type="submit" value="Log out">
+                    </form>
+                  </li>
+                </menu>
+              </li>
+            </ul>
+          </li>
+		  {% else %}
+		  <li id="global-menu-login">
+            <a href="/login" class="login">
+              <input type="image" alt="Sign in" src="/s/img/sign-in.png">
+            </a>
+          </li>
+		  {% endif %}
+        </menu>
+      </div>
+	  <div id="container">
+	  {% endif %}
+      <div id="main-body" 
+    class="{% if classes %}{{ classes|join(' ') }} {% endif %}{% if not req.user.is_authenticated %}
+	guest{% endif %}" 
+	csrf-token="{{ csrf_token_raw }}" time="{{ time }}">
+	  {% block main_body %}
+	  {% endblock %}
+      </div>
+	  {% if not pjax %}
+	  </div>
+      <div id="footer">
+        <div id="footer-inner">
+          <div class="link-container">
+			<p><a href="https://paypal.me/closedverse">Donate</a></p>
+			<p><a href="/help/contact">Contact</a></p>
+			<p id="copyright">Closedverse LE<br>
+			Page generated in <span>{{ time }}</span> ms</p>
+			</div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+{% endif %}{% endblock html %}

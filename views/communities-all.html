@@ -1,0 +1,123 @@
+{% extends 'layout.html' %}
+{% block main_body %}
+	<div class="community-main">
+	</div>
+	<div class="community-top-sidebar">
+	</div>
+	<div class="community-main">
+		<br>
+			<div class="community-switcher">
+				<a class="community-switcher-tab gen{% if type == 0 %} selected{% endif %}" href="/communities/all/general">General</a>
+				<a class="community-switcher-tab game{% if type == 1 %} selected{% endif %}" href="/communities/all/game">Game</a>
+				<a class="community-switcher-tab special{% if type == 2 %} selected{% endif %}" href="/communities/all/special">Special</a>
+			</div>
+			{% if type == 0 %}
+			<div class="communities">
+			{% if communities %}
+			<h3 class="community-title">General Communities</h3>
+				<ul class="list community-list community-card-list test-community-list-item">
+					{% for community in communities %}
+					<li class="trigger" data-href="/communities/{{ community.id }}" class="test-community-list-item"}>
+						{% if community.banner %}
+							<img src="{{ community.banner }}" class="community-list-cover">
+						{% endif %}
+						<div class="community-list-body">
+							<span class="icon-container">
+								<img class="icon" src="{{ community.icon }}">
+							</span>
+							<div class="body">
+								<a class="title" href="/communities/{{ community.id }}">{{ community.name }}</a>
+								{% if community.platform %}<span class="platform-tag">
+								<img src="/s/img/platform-tag-{{ community.platform_icon }}.png">
+								</span>{% endif %}
+								<span class="text">{% if community.platform %}{{ community.platform_txt }}{% else %}{{ community.type_txt }}{% endif %}</span>
+							</div>
+						</div>
+					</li>
+					{% endfor %}
+				</ul>
+			{% else %}
+					<div class="post-list-outline">
+						<div class="no-content">
+							<p>No communities of this type have been created yet.</p>
+						</div>
+					</div>
+			{% endif %}
+			</div>
+			{% endif %}
+			{% if type == 1 %}
+			<div class="communities game">
+			{% if communities %}
+			<h3 class="community-title">Game Communities</h3>
+				<ul class="list community-list community-card-list test-community-list-item">
+					{% for community in communities %}
+					<li class="trigger" data-href="/communities/{{ community.id }}" class="test-community-list-item"}>
+						{% if community.banner %}
+							<img src="{{ community.banner }}" class="community-list-cover">
+						{% endif %}
+						<div class="community-list-body">
+							<span class="icon-container">
+								<img class="icon" src="{{ community.icon }}">
+							</span>
+							<div class="body">
+								<a class="title" href="/communities/{{ community.id }}">{{ community.name }}</a>
+								{% if community.platform %}<span class="platform-tag">
+								<img src="/s/img/platform-tag-{{ community.platform_icon }}.png">
+								</span>{% endif %}
+								<span class="text">{% if community.platform %}{{ community.platform_txt }}{% else %}{{ community.type_txt }}{% endif %}</span>
+							</div>
+						</div>
+					</li>
+					{% endfor %}
+				</ul>
+			{% else %}
+					<div class="post-list-outline">
+						<div class="no-content">
+							<p>No communities of this type have been created yet.</p>
+						</div>
+					</div>
+			{% endif %}
+			</div>
+			{% endif %}
+			{% if type == 2 %}
+			<div class="communities special">
+			{% if communities %}
+			<h3 class="community-title">Special Communities</h3>
+				<ul class="list community-list community-card-list test-community-list-item">
+					{% for community in communities %}
+					<li class="trigger" data-href="/communities/{{ community.id }}" class="test-community-list-item"}>
+						{% if community.banner %}
+							<img src="{{ community.banner }}" class="community-list-cover">
+						{% endif %}
+						<div class="community-list-body">
+							<span class="icon-container">
+								<img class="icon" src="{{ community.icon }}">
+							</span>
+							<div class="body">
+								<a class="title" href="/communities/{{ community.id }}">{{ community.name }}</a>
+								{% if community.platform %}<span class="platform-tag">
+								<img src="/s/img/platform-tag-{{ community.platform_icon }}.png">
+								</span>{% endif %}
+								<span class="text">{% if community.platform %}{{ community.platform_txt }}{% else %}{{ community.type_txt }}{% endif %}</span>
+							</div>
+						</div>
+					</li>
+					{% endfor %}
+				</ul>
+			{% else %}
+					<div class="post-list-outline">
+						<div class="no-content">
+							<p>No communities of this type have been created yet.</p>
+						</div>
+					</div>
+			{% endif %}
+			</div>
+			{% endif %}
+			{% if next_offset %}
+				<a href="/communities/all/{{ req.params[0] }}?offset={{ next_offset }}" class="big-button">Next</a>
+			{% endif %}
+			{% if back_offset != undefined %}
+				<a href="/communities/all/{{ req.params[0] }}?offset={{ back_offset }}" class="big-button">Back</a>
+			{% endif %}
+	</div>
+{% endblock %}

@@ -1,0 +1,6 @@
+<div id="empathy-content"{% if not yeahs.length %} class="none"{% endif %}>
+{% if req.user.is_authenticated %}<a href="/users/{{ req.user.username }}" class="post-permalink-feeling-icon visitor {{ req.user.doClass(0) }}"{% if not hasYeah %} style="display: none;"{% endif %}><img src="{{ req.user.doAvatar(feeling) }}" class="user-icon"></a>{% endif %}
+{% for yeah in yeahs %}{% if not req.user.is_authenticated or not yeah.by_id == req.user.id %}
+<a href="/users/{{ yeah.by.username }}" class="post-permalink-feeling-icon {{ yeah.by.doClass(0) }}"><img src="{{ yeah.by.doAvatar(feeling) }}" class="user-icon"></a>
+{% endif %}{% endfor %}
+</div>

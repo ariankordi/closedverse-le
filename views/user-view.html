@@ -1,0 +1,40 @@
+{% extends 'layout.html' %}
+{% block main_body %}
+
+{% set general = false %}
+{% set selection = 0 %}
+{% include 'elements/user-sidebar.html' %}
+<div class="main-column">
+    <div class="post-list-outline">
+        <h2 class="label">Recent posts</h2>
+		{% if posts.count < 1 %}
+        <div class="post-list empty">
+            <p>The user hasn't made any posts yet.</p>
+        </div>
+		{% else %}
+		<div class="post-body">
+          <div class="list multi-timeline-post-list">
+			{% include 'elements/profile-post-list.html' %}
+          </div>
+        </div>
+		{% endif %}
+    </div><a class="big-button" href="/users/{{ user.username }}/posts">View posts</a>
+	{% if profile.yeahs_visible %}
+    <div class="post-list-outline">
+        <h2 class="label">Recently yeahed posts</h2>
+		{% if yeahedPosts.count < 1 %}
+        <div class="post-list empty">
+            <p>The user hasn't given a yeah to any posts yet.</p>
+        </div>
+		{% else %}
+		<div class="post-body">
+          <div class="list multi-timeline-post-list">
+               {% set posts = yeahedPosts %}
+			{% include 'elements/profile-post-list.html' %}
+          </div>
+        </div>
+		{% endif %}
+    </div><a class="big-button" href="/users/{{ user.username }}/yeahs">View all yeahs</a>
+	{% endif %}
+</div>
+{% endblock %}

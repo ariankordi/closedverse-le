@@ -1,0 +1,88 @@
+{% extends 'layout.html' %}
+{% block main_body %}
+<div class="main-column">
+
+<div class="post-list-outline">
+  <a class="post-permalink-button info-ticker" href="/posts/{{ comment.original_post.id }}">
+	<span class="icon-container"><img src="{{ comment.original_post.creator.doAvatar(comment.original_post.feeling) }}" class="icon"></span>
+    <span>View <span class="post-user-description" {% if comment.original_post.creator.color %}style="color:{{ comment.original_post.creator.color }}"{% endif %}>{{ comment.original_post.creator.nickname }}'s post ({{ comment.original_post.trun()|truncate(35)|striptags(true)|escape }})</span> for this comment.</span>
+  </a>
+</div>
+<div class="post-list-outline more">
+  <div id="post-content" class="post reply-permalink-post">
+    <div class="other">
+      <p class="community-container"><a {% if comment.community.clickable %}href="/communities/{{ comment.community.id }}"{% endif %}><img src="{{ comment.community.icon }}" class="community-icon">{{ comment.community.name }}</a></p>
+	    {% if comment.canRemove(req.user) %}
+		<div class="edit-buttons-content">
+				<button type="button" class="symbol button edit-button rm-post-button" data-action="/comments/{{ comment.id }}.destroy"><span class="symbol-label">Delete</span></button>
+          {#
+          {% if comment.belongsTo(req.user) and not comment.has_edit %}
+			<button type="button" class="symbol button edit-button edit-post-button"><span class="symbol-label">Edit</span></button>
+		{% endif %}
+          #}
+		</div>
+	{% endif %}
+
+      <div class="user-content">
+        {% user_icon_container user=comment.creator, feeling=comment.feeling %}
+        <div class="user-name-content">
+          <p class="user-name"><a {% if comment.creator.color %}style="color:{{ comment.creator.color }}"{% endif %} href="/users/{{ comment.creator.username }}">{{ comment.creator.nickname }}</a></p>
+		<p class="timestamp-container">
+				<span class="spoiler-status{% if comment.spoiler %} spoiler{% endif %}">Spoilers · </span>
+				{% if comment.has_edit %}<span class="spoiler">Edited · </span>{% endif %}
+				<a class="timestamp" href="/comments/{{ comment.id }}">{% time comment.created %}</a>
+				{% if comment.drawing %} <span class="spoiler">(handwritten)</span> {% endif %}</p>
+        </div>
+      </div>
+      <div class="body">
+		 {#
+	  	{% if comment.is_mine %}
+		<div id="post-edit" class="none">
+			<form data-action="{% url "main:comment-change" comment.id %}" id="edit-form" method="post">
+			{% feeling_selector comment.feeling %}
+			<div class="textarea-container">
+				<textarea name="body" class="textarea-text textarea " maxlength="2200" placeholder="Edit your comment." data-required="">{{ comment.body }}</textarea>
+			</div>
+				<div class="post-form-footer-options">
+					<label class="spoiler-button symbol"><input id="is_spoiler" name="is_spoiler" type="checkbox" value="1"{% if comment.spoils %} checked{% endif %}>Spoilers</label>
+				</div>
+				<div class="form-buttons">
+					<button type="button" class="cancel-button gray-button">Cancel</button>
+					<button type="submit" class="post-button black-button">Submit</button>
+				</div>
+			</form>
+		</div>
+		{% endif %}
+		 #}
+	  	<div id="the-post">
+            {% if comment.drawing %}
+			<p class="reply-content-memo"><img src="{{ comment.drawing }}" class="post-memo"></p>
+			{% else %}
+			<p class="reply-content-text">{{ comment.body|striptags(true)|escape|nl2br }}</p>
+			{% endif %}
+		{% if comment.screenshot %}
+		<div class="screenshot-container still-image"><img src="{{ comment.screenshot }}"></div>
+		{% endif %}
+	   <div class="post-meta">
+			   <button class="symbol submit yeah-button
+			   {% if comment.has_yeah %}empathy-added{% endif %}
+			   {% if not comment.canYeah(req.user) %}disabled{% endif %}"
+			   data-action="/comments/{{ comment.id }}/yeah" {% if not comment.canYeah(req.user) %}disabled{% endif %} data-feeling="{{ comment.feeling }}" data-url-id="{{ comment.id }}" type="button"><span class="yeah-button-text">{% yeah_button feeling=comment.feeling, appear=comment.has_yeah %}</span></button>
+			   <div class="empathy symbol">
+				   <span class="symbol-label">Yeahs</span><span class="empathy-count">{{ comment.num_yeahs }}</span>
+			   </div>
+	   </div>
+		</div>
+	   {% set feeling = comment.feeling %}
+        {% set hasYeah = comment.has_yeah %}
+  	   {% include 'elements/empathy-content.html' %}
+
+
+      </div>
+    </div>
+  </div>
+
+
+</div>
+</div>
+{% endblock %}

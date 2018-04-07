@@ -1,0 +1,60 @@
+{% extends 'layout.html' %}
+{% block main_body %}
+<div id="sidebar">
+	<section class="sidebar-container" id="sidebar-community">
+		{% if community.banner %}
+		<span id="sidebar-cover">
+			<a href="/communities/{{ community.id }}">
+				<img src="{{ community.banner }}">
+			</a>
+		</span>
+		{% endif %}
+	<header id="sidebar-community-body">
+		<span id="sidebar-community-img">
+			<span class="icon-container">
+				<a href="/communities/{{ community.id }}">
+					<img src="{{ community.icon }}" class="icon">
+				</a>
+			</span>
+			<span class="platform-tag">
+				{% if community.platform %}<img src="/s/img/platform-tag-{{ community.platform_icon }}.png">{% endif %}
+			</span>
+		</span>
+		{% if community.tags == 'announcements' %}
+		<span class="news-community-badge">Announcement Community</span>
+		{% elif community.tags == 'changelog' %}
+		<span class="news-community-badge">Changelog Community</span>
+		{% endif %}
+		<h1 class="community-name">
+			<a href="/communities/{{ community.id }}">{{ community.name }}</a>
+		</h1>
+	</header>
+	{% if community.description %}
+		<div class="community-description js-community-description">
+			<p class="text js-truncated-text">{{ community.description|striptags(true)|escape|nl2br }}</p>
+		</div>
+	{% endif %}
+	{% if req.user.is_authenticated %}
+		{#
+
+		<button type="button" class="symbol button favorite-button{% if community.has_favorite %} checked{% endif %}" data-action-favorite="{% url "main:community-favorite-add" community.id %}" data-action-unfavorite="{% url "main:community-favorite-rm" community.id %}"><span class="favorite-button-text">Favorite</span></button>
+
+		#}
+	{% endif %}
+	</section>
+</div>
+	<div class="main-column">
+		<div class="post-list-outline">
+		{% include 'elements/post-form.html' %}
+			<div class="body-content" id="community-post-list">
+				<div class="list post-list js-post-list">
+					{% set type = 0 %}
+					{% set withCommunityContainer = false %}
+
+					{% include 'elements/post-list.html' %}
+				</div>
+			</div>
+		</div>
+	</div>
+
+{% endblock %}

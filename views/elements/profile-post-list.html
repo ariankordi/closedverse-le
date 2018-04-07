@@ -1,0 +1,57 @@
+{% for post in posts %}{% if not post.is_rm %}<div {% if post.spoiler and not post.belongsTo(req.user) %}data-href-hidden{% else %}data-href{% endif %}="/posts/{{ post.id }}" class="post trigger{% if post.screenshot %} with-image{% endif %}{% if post.spoiler and not post.belongsTo(req.user) %} hidden test-hidden{% endif %}">
+
+    <p class="community-container"><a {% if post.community.clickable() %}href="/communities/{{ post.community_id }}"{% endif %}><img src="{{ post.community.icon }}" class="community-icon">{{ post.community.name }}</a></p>
+
+  <div class="body">
+    <div class="post-content">
+		{% user_icon_container user=post.creator, feeling=post.feeling %}
+
+          <p class="user-name"><a {% if post.creator.color %}style="color:{{ post.creator.color }}"{% endif %} href="/users/{{ post.creator.username }}">{{ post.creator.nickname }}</a></p>
+
+          <p class="timestamp-container">
+             <span class="spoiler-status{% if post.spoiler %} spoiler{% endif %}">Spoilers · </span>
+             {% if post.has_edit %}<span class="spoiler">Edited · </span>{% endif %}
+             <a class="timestamp" {% if post.spoiler and not post.belongsTo(req.user) %}data-href-hidden{% else %}href{% endif %}="/posts/{{ post.id }}">{% time post.created %}</a>
+             {% if post.drawing %} <span class="spoiler">(handwritten)</span> {% endif %}</p>
+
+					{% if post.yt() %}
+					<a href="/posts/{{ post.id }}" class="screenshot-container video"><img height="48" src="https://i.ytimg.com/vi/{{ post.yt() }}/default.jpg"></a>
+					{% endif %}
+			{% if post.screenshot %}
+			<a href="/posts/{{ post.id }}" class="screenshot-container still-image"><img src="{{ post.screenshot }}"></a>
+			{% endif %}
+			{% if post.drawing %}
+			<p class="post-content-memo"><img src="{{ post.drawing }}" class="post-memo"></p>
+			{% else %}
+				{% if post.hasLineTrun() %}
+				<p class="post-content-text">{{ post.body|truncate(200)|striptags(true)|escape }}</p>
+				{% else %}
+				<p class="post-content-text">{{ post.body|truncate(200)|striptags(true)|escape|nl2br }}</p>
+				{% endif %}
+			{% endif %}
+			{% if post.spoiler and not post.belongsTo(req.user) %}
+			<div class="hidden-content"><p>This post contains spoilers.
+                <button type="button" class="hidden-content-button">View Post</button>
+          </p></div>
+			{% endif %}
+               <div class="post-meta">
+                    <button class="symbol submit yeah-button
+                    {% if post.has_yeah %}empathy-added{% endif %}
+                    {% if not post.canYeah(req.user) %}disabled{% endif %}"
+                    data-action="{% if post.isReply %}/comments/{{ post.id }}{% else %}/posts/{{ post.id }}{% endif %}/yeah" {% if not post.canYeah(req.user) %}disabled{% endif %} data-feeling="{{ post.feeling }}" data-url-id="{{ post.id }}" type="button"><span class="yeah-button-text">{% yeah_button feeling=post.feeling, appear=post.has_yeah %}</span></button>
+                    {% if post.url %}
+                         <a class="link-confirm symbol button" href="{{ post.url }}"></a>
+                    {% endif %}
+                    <div class="empathy symbol">
+                         <span class="symbol-label">Yeahs</span><span class="empathy-count">{{ post.num_yeahs }}</span>
+                    </div>
+                    {% if not post.isReply %}
+                         <div class="reply symbol">
+                              <span class="symbol-label">Comments</span><span class="reply-count">{{ post.num_comments }}</span>
+                         </div>
+                    {% endif %}
+               </div>
+
+    </div>
+  </div>
+</div>{% endif %}{% endfor %}

@@ -1,0 +1,44 @@
+{% extends 'layout.html' %}
+{% block main_body %}
+{#
+	{% user_sidebar request user user.profile 0 True %}
+#}
+<div class="main-column"><div class="post-list-outline">
+	<h2 class="label">Search Communities</h2>
+	<form class="search user-search" action="/communities/search">
+		<input type="text" name="q" value="{{ req.query.q }}" placeholder="Mario, etc." minlength="1" maxlength="32">
+		<input type="submit" value="q" title="Search">
+	</form>
+	{% if communities.length %}
+	<div class="search-content">
+		<p class="user-found note">{{ communities.length }} result{% if communities.length != 1 %}s{% endif %} found for "{{ req.query.q }}"</p>
+		<ul class="list community-list community-card-list">
+		{% for community in communities %}
+			<li class="trigger test-community-list-item" data-href="/communities/{{ community.id }}">
+				{% if community.banner %}
+					<img src="{{ community.banner }}" class="community-list-cover">
+				{% endif %}
+				<div class="community-list-body">
+					<span class="icon-container"><img src="{{ community.icon }}" class="icon"></span>
+					<div class="body">
+						<a class="title" href="/communities/{{ community.id }}">{{ community.name }}</a>
+						{% if community.platform %}<span class="platform-tag">
+						<img src="/s/img/platform-tag-{{ community.platform_icon }}.png">
+						</span>{% endif %}
+						<span class="text">{% if community.platform %}{{ community.platform_txt }}{% else %}{{ community.type_txt }}{% endif %}</span>
+						</div>
+				</div>
+			</li>
+		{% endfor %}
+		</ul>
+	</div>
+	{% else %}
+	<div class="no-content search-content">
+		<div class="search-content no-title-content">
+			<p>"{{ req.query.q }}" could not be found.<br>
+Try searching for something different.</p>
+		</div>
+	</div>
+	{% endif %}
+</div></div>
+{% endblock %}

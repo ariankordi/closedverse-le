@@ -1,0 +1,37 @@
+{% for comment in comments %} {% if not comment.is_rm %}
+	<li {% if comment.spoiler and not comment.belongsTo(req.user) %}data-href-hidden{% else %}data-href{% endif %}="/comments/{{ comment.id }}" class="post {% if comment.belongsTo(req.user) %}my{% else %}other{% endif %}{% if comment.spoiler and not comment.belongsTo(req.user) %} hidden{% endif %} trigger">
+		{% user_icon_container user=comment.creator, feeling=comment.feeling %}
+  		<div class="body">
+    			<div class="header">
+				<p class="user-name"><a href="/users/{{ comment.creator.username }}" {% if comment.creator.color %}style="color:{{ comment.creator.color }}"{% endif %}>{{ comment.creator.nickname }}</a></p>
+				<p class="timestamp-container">
+					<span class="spoiler-status{% if comment.spoiler %} spoiler{% endif %}">Spoilers · </span>
+					{% if comment.has_edit %}<span class="spoiler">Edited · </span>{% endif %}
+					<a class="timestamp" {% if comment.spoiler and not comment.belongsTo(req.user) %}data-href-hidden{% else %}href{% endif %}="/comments/{{ comment.id }}">{% time comment.created %}</a>
+					{% if comment.drawing %} <span class="spoiler">(handwritten)</span> {% endif %}</p>
+    			</div>
+    {% if comment.drawing %}
+    <p class="reply-content-memo"><img src="{{ comment.drawing }}"></p>
+	{% else %}
+    <div class="reply-content-text">{{ comment.body|striptags(true)|escape|nl2br }}</div>
+	{% endif %}
+	{% if comment.screenshot %}
+	<div class="screenshot-container still-image"><img src="{{ comment.screenshot }}"></div>
+	{% endif %}
+	{% if comment.spoiler and not comment.belongsTo(req.user) %}
+		<div class="hidden-content"><p>This comment contains spoilers.</p>
+      <button type="button" class="hidden-content-button">View Comment</button>
+    </div>
+	{% endif %}
+	<div class="reply-meta">
+		<button class="symbol submit yeah-button
+		{% if comment.has_yeah %}empathy-added{% endif %}
+		{% if not comment.canYeah(req.user) %}disabled{% endif %}"
+		data-action="/comments/{{ comment.id }}/yeah" {% if not comment.canYeah(req.user) %}disabled{% endif %} data-is-in-reply-list="1" data-feeling="{{ comment.feeling }}" data-url-id="{{ comment.id }}" type="button"><span class="yeah-button-text">{% yeah_button feeling=comment.feeling, appear=comment.has_yeah %}</span></button>
+		<div class="empathy symbol">
+			<span class="symbol-label">Yeahs</span><span class="empathy-count">{{ comment.num_yeahs }}</span>
+		</div>
+	</div>
+  </div>
+</li>
+{% endif %} {% endfor %}

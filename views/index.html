@@ -1,0 +1,152 @@
+{% extends 'layout.html' %}
+{% block main_body %}
+
+	<div class="community-top-sidebar">
+		<form action="/communities/search" class="search">
+			<input maxlength="32" name="q" placeholder="Search all communities" type="text"><input title="Search" type="submit" value="q">
+		</form>
+		<!--
+		<div id="identified-user-banner">
+			<a class="list-button" href="/identified_user_posts"><span class="title">Get the latest news here!</span><span class="text">Posts from Verified Users</span></a>
+		</div>-->
+		{% if memo_title and memo_msg %}
+		<div class="post-list-outline index-memo">
+			<h2 class="label">{{ memo_title }}</h2>
+			<p>{{ memo_msg | safe }}</p>
+		</div>
+		{% endif %}
+	</div>
+	<div class="community-main">
+	{% if favorites %}
+		<h3 class="community-title symbol community-favorite-title">Favorite communities</h3>
+		<div class="card" id="community-favorite">
+		  <ul>
+			{% for favorite in favorites %}
+				<li class="test-favorite-community">
+				  <a href="/communities/{{ favorites.id }}" class="icon-container">
+					<img src="{{ favorite.iconn }}" class="icon">
+				  </a>
+				</li>
+			 {% endfor %}
+				
+			<li class="read-more">
+			  <a href="/communities/favorites" class="favorite-community-link symbol"><span class="symbol-label">Show more</span></a>
+			</li>
+		  </ul>
+		</div>
+	{% endif %}
+		{% if featured %}
+			<h3 class="community-title">Featured Communities</h3>
+				<ul class="list community-list community-card-list test-community-list-item">
+					{% for community in featured %}
+					<li class="trigger" data-href="/communities/{{ community.id }}" class="test-community-list-item">
+						<img src="{{ community.banner }}" class="community-list-cover">
+						<div class="community-list-body">
+							<span class="icon-container">
+								<img class="icon" src="{{ community.icon }}">
+							</span>
+							<div class="body">
+								<a class="title" href="/communities/{{ community.id }}">{{ community.name }}</a>
+								{% if community.platform %}<span class="platform-tag">
+								<img src="/s/img/platform-tag-{{ community.platform_icon }}.png">
+								</span>{% endif %}
+								<span class="text">{% if community.platform %}{{ community.platform_txt }}{% else %}{{ community.type_txt }}{% endif %}</span>
+							</div>
+						</div>
+					</li>
+					{% endfor %}
+				</ul>
+			{% endif %}
+			<h3 class="community-title">General Communities</h3>
+				{% if general %}
+				<ul class="list community-list community-card-list test-community-list-item">
+					{% for community in general %}
+					<li class="trigger" data-href="/communities/{{ community.id }}" class="test-community-list-item">
+						<div class="community-list-body">
+							<span class="icon-container">
+								<img class="icon" src="{{ community.icon }}">
+							</span>
+							<div class="body">
+								<a class="title" href="/communities/{{ community.id }}">{{ community.name }}</a>
+								{% if community.platform %}<span class="platform-tag">
+								<img src="/s/img/platform-tag-{{ community.platform_icon }}.png">
+								</span>{% endif %}
+								<span class="text">{% if community.platform %}{{ community.platform_txt }}{% else %}{{ community.type_txt }}{% endif %}</span>
+							</div>
+						</div>
+					</li>
+					{% endfor %}
+				</ul>
+				{% else %}
+					<div class="post-list-outline">
+						<div class="no-content">
+							<p>No communities of this type have been created yet.</p>
+						</div>
+					</div>
+				{% endif %}
+			<h3 class="community-title">Game Communities</h3>
+				{% if game %}
+				<ul class="list community-list community-card-list test-community-list-item">
+					{% for community in game %}
+					<li class="trigger" data-href="/communities/{{ community.id }}" class="test-community-list-item">
+						<div class="community-list-body">
+							<span class="icon-container">
+								<img class="icon" src="{{ community.icon }}">
+							</span>
+							<div class="body">
+								<a class="title" href="/communities/{{ community.id }}">{{ community.name }}</a>
+								{% if community.platform %}<span class="platform-tag">
+								<img src="/s/img/platform-tag-{{ community.platform_icon }}.png">
+								</span>{% endif %}
+								<span class="text">{% if community.platform %}{{ community.platform_txt }}{% else %}{{ community.type_txt }}{% endif %}</span>
+							</div>
+						</div>
+					</li>
+					{% endfor %}
+				</ul>
+				{% else %}
+					<div class="post-list-outline">
+						<div class="no-content">
+							<p>No communities of this type have been created yet.</p>
+						</div>
+					</div>
+				{% endif %}
+			<h3 class="community-title">Special Communities</h3>
+				{% if special %}
+				<ul class="list community-list community-card-list test-community-list-item">
+					{% for community in special %}
+					<li class="trigger" data-href="/communities/{{ community.id }}" class="test-community-list-item">
+						<div class="community-list-body">
+							<span class="icon-container">
+								<img class="icon" src="{{ community.icon }}">
+							</span>
+							<div class="body">
+								<a class="title" href="/communities/{{ community.id }}">{{ community.name }}</a>
+								{% if community.platform %}<span class="platform-tag">
+								<img src="/s/img/platform-tag-{{ community.platform_icon }}.png">
+								</span>{% endif %}
+								<span class="text">{% if community.platform %}{{ community.platform_txt }}{% else %}{{ community.type_txt }}{% endif %}</span>
+							</div>
+						</div>
+					</li>
+					{% endfor %}
+				</ul>
+				{% else %}
+					<div class="post-list-outline">
+						<div class="no-content">
+							<p>No communities of this type have been created yet.</p>
+						</div>
+					</div>
+				{% endif %}
+			<a href="/communities/all/general" class="big-button">Show all</a>
+	</div>
+	<div id="community-guide-footer">
+		<div id="guide-menu">
+			<a class="arrow-button" href="/help/rules"><span>Closedverse Rules</span></a>
+			<a class="arrow-button" href="/help/faq"><span>Frequently Asked Questions (FAQ)</span></a>
+			<a class="arrow-button" href="/help/legal"><span>Legal information</span></a>
+			<a class="arrow-button" href="/help/contact"><span>Contact information</span></a>
+			<a class="arrow-button" href="https://pf2m.com/openverse/"><span>Info about Openverse</span></a>
+		</div>
+	</div>
+{% endblock %}

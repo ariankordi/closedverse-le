@@ -1,0 +1,14 @@
+{
+	"secret": "ok",
+	"memo_title": "YES",
+	"memo_msg": "you're",
+	"my": {
+		"_comment": "log logs queries to the console. Use this in debug.",
+		"log": true,
+		"host": "localhost",
+		"port": "3306",
+		"user": "root",
+		"dbname": "closedverseREAL",
+		"password": ""
+	}
+}
